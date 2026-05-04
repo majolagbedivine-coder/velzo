@@ -1,0 +1,26 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "eks3X7jhJjR-ZKRwE26Ng"
+uri = "file://artifacts/velzo/src/assets/hero-mockup.png"
+type = "image"
+title = "Dashboard UI Mockup"
+
+[[generated]]
+id = "1si7zF7iNEoNeSf1ZVDEU"
+uri = "file://artifacts/velzo/src/assets/testimonial-1.png"
+type = "image"
+title = "Portrait of a creator"
+
+[[generated]]
+id = "40NbiHnfKUifJSxakCUfC"
+uri = "file://artifacts/velzo/src/assets/testimonial-2.png"
+type = "image"
+title = "Portrait of a creator"
+
+[[generated]]
+id = "e8LyF4ub8O1tGmFWEABnP"
+uri = "file://artifacts/velzo/src/assets/testimonial-3.png"
+type = "image"
+title = "Portrait of a creator"

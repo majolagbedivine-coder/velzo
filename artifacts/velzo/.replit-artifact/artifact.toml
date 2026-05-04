@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Velzo — Digital Marketplace"
+version = "1.0.0"
+id = "artifacts/velzo"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22617
+
+[services.development]
+run = "pnpm --filter @workspace/velzo run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/velzo", "run", "build" ]
+publicDir = "artifacts/velzo/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22617"
+BASE_PATH = "/"

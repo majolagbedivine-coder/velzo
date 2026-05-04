@@ -1,0 +1,138 @@
+{
+  "colorScheme": "light",
+  "fonts": [
+    {
+      "family": "Plus Jakarta Sans",
+      "role": "body"
+    }
+  ],
+  "colors": {
+    "primary": "#1D6146",
+    "secondary": "#FEF3C6",
+    "accent": "#1D6146",
+    "background": "#FFFFFF",
+    "textPrimary": "#1C1917",
+    "link": "#6B8376"
+  },
+  "typography": {
+    "fontFamilies": {
+      "primary": "Plus Jakarta Sans",
+      "heading": "Plus Jakarta Sans"
+    },
+    "fontStacks": {
+      "heading": [
+        "Plus Jakarta Sans"
+      ],
+      "body": [
+        "Plus Jakarta Sans"
+      ],
+      "paragraph": [
+        "Plus Jakarta Sans"
+      ]
+    },
+    "fontSizes": {
+      "h1": "16px",
+      "h2": "20px",
+      "body": "48px"
+    }
+  },
+  "spacing": {
+    "baseUnit": 4,
+    "borderRadius": "0px"
+  },
+  "components": {
+    "input": {
+      "background": "transparent",
+      "textColor": "#1C1917",
+      "borderColor": null,
+      "borderRadius": "0px",
+      "borderRadiusCorners": {
+        "topLeft": "0px",
+        "topRight": "0px",
+        "bottomRight": "0px",
+        "bottomLeft": "0px"
+      },
+      "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+    },
+    "buttonPrimary": {
+      "background": "#1D6146",
+      "textColor": "#FFFFFF",
+      "borderRadius": "14px",
+      "borderRadiusCorners": {
+        "topLeft": "14px",
+        "topRight": "14px",
+        "bottomRight": "14px",
+        "bottomLeft": "14px"
+      },
+      "shadow": "none"
+    },
+    "buttonSecondary": {
+      "background": "#6B8376",
+      "textColor": "#FFFFFF",
+      "borderRadius": "10px",
+      "borderRadiusCorners": {
+        "topLeft": "10px",
+        "topRight": "10px",
+        "bottomRight": "10px",
+        "bottomLeft": "10px"
+      },
+      "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px"
+    }
+  },
+  "images": {
+    "logo": "https://usegrade.com/logos/logo-text-black.svg",
+    "favicon": "https://usegrade.com/favicon.ico?favicon.5ca26e0f.ico",
+    "ogImage": "https://usegrade.com/social-card-thumbnail.png",
+    "logoHref": "File saved at: attached_assets/logoHref.html",
+    "logoAlt": "Grade Logo"
+  },
+  "__llm_logo_reasoning": {
+    "selectedIndex": 7,
+    "reasoning": "Selected #7 because it is visible, located in the header, has a medium size, and the alt text matches the brand name 'Grade'.",
+    "confidence": 0.95,
+    "source": "llm"
+  },
+  "__llm_button_reasoning": {
+    "primary": {
+      "index": 1,
+      "text": "Book a Demo",
+      "reasoning": "Button #1 has a vibrant brand color (#1D6146) and action-oriented text ('Book a Demo'), making it the primary CTA."
+    },
+    "secondary": {
+      "index": 3,
+      "text": "Approve & Pay",
+      "reasoning": "Button #3 has a different background color (#6B8376) and serves a secondary action ('Approve & Pay'), fitting the role of a secondary button."
+    },
+    "confidence": 0.95
+  },
+  "personality": {
+    "tone": "professional",
+    "energy": "medium",
+    "targetAudience": "businesses and creators"
+  },
+  "designSystem": {
+    "framework": "tailwind",
+    "componentLibrary": ""
+  },
+  "confidence": {
+    "buttons": 0.95,
+    "colors": 0.9,
+    "overall": 0.925
+  },
+  "__llm_metadata": {
+    "logoSelection": {
+      "llmCalled": true,
+      "llmSucceeded": true,
+      "finalSource": "llm",
+      "rawLogoSelection": {
+        "selectedLogoIndex": 7,
+        "selectedLogoReasoning": "Selected #7 because it is visible, located in the header, has a medium size, and the alt text matches the brand name 'Grade'.",
+        "confidence": 0.95
+      }
+    },
+    "buttonClassification": {
+      "llmCalled": true,
+      "llmSucceeded": true
+    }
+  }
+}
