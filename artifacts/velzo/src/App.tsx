@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Landing from "@/pages/Landing";
+import Auth from "@/pages/Auth";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -11,6 +12,12 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Landing} />
+      <Route path="/login">
+        {() => <Auth mode="login" />}
+      </Route>
+      <Route path="/signup">
+        {() => <Auth mode="signup" />}
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );
