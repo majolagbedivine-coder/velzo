@@ -41,9 +41,14 @@ testem.log
 .DS_Store
 Thumbs.db
 
-.cursor/rules/nx-rules.mdc
-.github/instructions/nx.instructions.md
+# Environment files — never commit real secrets
+.env
+.env.local
+.env.production
+.env.*.local
 
-# Replit
+# Replit-specific (not needed on GitHub)
 .cache/
 .local/
+.cursor/
+.github/instructions/nx.instructions.md
