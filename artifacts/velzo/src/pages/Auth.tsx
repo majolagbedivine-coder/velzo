@@ -5,7 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Eye, EyeOff, ArrowLeft, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft, Star, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { useRegisterUser, useLoginUser } from "@workspace/api-client-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 import velzoIcon from "@/assets/velzo-icon.jpg";
 import testimonial1 from "@/assets/testimonial-1.png";
@@ -161,8 +164,42 @@ function AuthForm({ mode }: AuthFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [role, setRole] = useState<"buyer" | "seller">("buyer");
+  const [submitting, setSubmitting] = useState(false);
+
+  const { login } = useAuth();
+  const { toast } = useToast();
+  const registerUser = useRegisterUser();
+  const loginUser = useLoginUser();
 
   const isLogin = mode === "login";
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email || !password || (!isLogin && !name)) return;
+    setSubmitting(true);
+    try {
+      if (isLogin) {
+        const res = await loginUser.mutateAsync({ data: { email, password } });
+        login(res.token, res.user as any);
+        navigate("/dashboard");
+      } else {
+        const res = await registerUser.mutateAsync({
+          data: { email, password, name, role },
+        });
+        login(res.token, res.user as any);
+        navigate(role === "seller" ? "/store/create" : "/catalog");
+      }
+    } catch (err: any) {
+      toast({
+        title: isLogin ? "Sign in failed" : "Registration failed",
+        description: err?.data?.error ?? "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <div className="flex flex-col h-full p-8 md:p-12 lg:p-16 justify-center">
@@ -185,11 +222,12 @@ function AuthForm({ mode }: AuthFormProps) {
           </p>
         </div>
 
-        {/* Google OAuth button */}
+        {/* Google OAuth button (decorative for now) */}
         <Button
           variant="outline"
           className="w-full h-12 rounded-xl mb-6 font-medium text-base flex items-center gap-3"
           type="button"
+          disabled
         >
           <svg viewBox="0 0 24 24" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -209,13 +247,7 @@ function AuthForm({ mode }: AuthFormProps) {
         </div>
 
         {/* Form */}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            navigate(isLogin ? "/" : "/");
-          }}
-          className="space-y-5"
-        >
+        <form onSubmit={handleSubmit} className="space-y-5">
           {!isLogin && (
             <div className="space-y-2">
               <Label htmlFor="name" className="text-sm font-semibold">Full name</Label>
@@ -248,9 +280,7 @@ function AuthForm({ mode }: AuthFormProps) {
             <div className="flex items-center justify-between">
               <Label htmlFor="password" className="text-sm font-semibold">Password</Label>
               {isLogin && (
-                <Link href="#" className="text-xs text-primary font-medium hover:underline">
-                  Forgot password?
-                </Link>
+                <span className="text-xs text-primary font-medium">Forgot password?</span>
               )}
             </div>
             <div className="relative">
@@ -274,16 +304,45 @@ function AuthForm({ mode }: AuthFormProps) {
           </div>
 
           {!isLogin && (
-            <p className="text-xs text-muted-foreground">
-              By creating an account you agree to our{" "}
-              <Link href="#" className="text-primary hover:underline font-medium">Terms of Service</Link>
-              {" "}and{" "}
-              <Link href="#" className="text-primary hover:underline font-medium">Privacy Policy</Link>.
-            </p>
+            <>
+              <div className="space-y-2">
+                <Label className="text-sm font-semibold">I want to</Label>
+                <div className="grid grid-cols-2 gap-3">
+                  {(["buyer", "seller"] as const).map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setRole(r)}
+                      className={`h-11 rounded-xl border-2 text-sm font-medium transition-all ${
+                        role === r
+                          ? "border-[#1D6146] bg-[#1D6146]/5 text-[#1D6146]"
+                          : "border-gray-200 text-gray-600 hover:border-gray-300"
+                      }`}
+                    >
+                      {r === "buyer" ? "Buy products" : "Sell products"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                By creating an account you agree to our{" "}
+                <span className="text-primary font-medium">Terms of Service</span>
+                {" "}and{" "}
+                <span className="text-primary font-medium">Privacy Policy</span>.
+              </p>
+            </>
           )}
 
-          <Button type="submit" className="w-full h-12 rounded-xl text-base font-semibold mt-2">
-            {isLogin ? "Sign in" : "Create free account"}
+          <Button
+            type="submit"
+            disabled={submitting}
+            className="w-full h-12 rounded-xl text-base font-semibold mt-2 bg-[#1D6146] hover:bg-[#174f38] text-white"
+          >
+            {submitting ? (
+              <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{isLogin ? "Signing in..." : "Creating account..."}</>
+            ) : (
+              isLogin ? "Sign in" : "Create free account"
+            )}
           </Button>
         </form>
 

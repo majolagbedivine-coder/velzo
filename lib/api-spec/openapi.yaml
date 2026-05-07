@@ -1,22 +1,28 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
-  version: 0.1.0
-  description: API specification
+  version: 0.2.0
+  description: Velzo Digital Marketplace API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: auth
+  - name: users
+  - name: stores
+  - name: products
+  - name: reviews
+  - name: conversations
+  - name: messages
+  - name: catalog
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +30,474 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /auth/register:
+    post:
+      operationId: registerUser
+      tags: [auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterBody"
+      responses:
+        "201":
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/login:
+    post:
+      operationId: loginUser
+      tags: [auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginBody"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /users/{userId}:
+    get:
+      operationId: getUser
+      tags: [users]
+      summary: Get user profile
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /stores:
+    get:
+      operationId: listStores
+      tags: [stores]
+      summary: List all stores
+      responses:
+        "200":
+          description: Stores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Store"
+    post:
+      operationId: createStore
+      tags: [stores]
+      summary: Create a store
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateStoreBody"
+      responses:
+        "201":
+          description: Created store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Store"
+
+  /stores/my:
+    get:
+      operationId: getMyStore
+      tags: [stores]
+      summary: Get the current user's store
+      responses:
+        "200":
+          description: Store or null
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreOrNull"
+
+  /stores/{storeId}:
+    get:
+      operationId: getStore
+      tags: [stores]
+      summary: Get a store by ID
+      parameters:
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Store"
+    put:
+      operationId: updateStore
+      tags: [stores]
+      summary: Update a store
+      parameters:
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateStoreBody"
+      responses:
+        "200":
+          description: Updated store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Store"
+
+  /stores/{storeId}/products:
+    get:
+      operationId: getStoreProducts
+      tags: [stores]
+      summary: Get products for a store
+      parameters:
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+  /products:
+    get:
+      operationId: listProducts
+      tags: [products]
+      summary: List/search products
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: sort
+          in: query
+          schema:
+            type: string
+        - name: minPrice
+          in: query
+          schema:
+            type: number
+        - name: maxPrice
+          in: query
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+    post:
+      operationId: createProduct
+      tags: [products]
+      summary: Create a product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProductBody"
+      responses:
+        "201":
+          description: Created product
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+
+  /products/featured:
+    get:
+      operationId: getFeaturedProducts
+      tags: [catalog]
+      summary: Get featured/trending products
+      responses:
+        "200":
+          description: Featured products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+  /products/my:
+    get:
+      operationId: getMyProducts
+      tags: [products]
+      summary: Get the current seller's products
+      responses:
+        "200":
+          description: Products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+  /products/{productId}:
+    get:
+      operationId: getProduct
+      tags: [products]
+      summary: Get a product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Product
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+    put:
+      operationId: updateProduct
+      tags: [products]
+      summary: Update a product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProductBody"
+      responses:
+        "200":
+          description: Updated product
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+    delete:
+      operationId: deleteProduct
+      tags: [products]
+      summary: Delete a product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /products/{productId}/reviews:
+    get:
+      operationId: listReviews
+      tags: [reviews]
+      summary: Get reviews for a product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Reviews
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Review"
+    post:
+      operationId: createReview
+      tags: [reviews]
+      summary: Create a review
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReviewBody"
+      responses:
+        "201":
+          description: Created review
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+
+  /conversations:
+    get:
+      operationId: listConversations
+      tags: [conversations]
+      summary: List conversations for current user
+      responses:
+        "200":
+          description: Conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Conversation"
+    post:
+      operationId: createConversation
+      tags: [conversations]
+      summary: Start or get a conversation with a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateConversationBody"
+      responses:
+        "200":
+          description: Conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+
+  /conversations/{conversationId}/messages:
+    get:
+      operationId: listMessages
+      tags: [messages]
+      summary: Get messages in a conversation
+      parameters:
+        - name: conversationId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+    post:
+      operationId: sendMessage
+      tags: [messages]
+      summary: Send a message
+      parameters:
+        - name: conversationId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendMessageBody"
+      responses:
+        "201":
+          description: Sent message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+
+  /catalog/stats:
+    get:
+      operationId: getCatalogStats
+      tags: [catalog]
+      summary: Marketplace stats
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CatalogStats"
+
 components:
   schemas:
     HealthStatus:
@@ -31,6 +505,280 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+
+    RegisterBody:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [buyer, seller]
+      required: [email, password, name, role]
+
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required: [email, password]
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+      required: [token, user]
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+        avatar:
+          type: ["string", "null"]
+        bio:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required: [id, email, name, role, createdAt]
+
+    Store:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: ["string", "null"]
+        logo:
+          type: ["string", "null"]
+        banner:
+          type: ["string", "null"]
+        owner:
+          $ref: "#/components/schemas/User"
+        productCount:
+          type: integer
+        createdAt:
+          type: string
+      required: [id, userId, name, slug, createdAt, productCount]
+
+    StoreOrNull:
+      type: object
+      properties:
+        store:
+          oneOf:
+            - $ref: "#/components/schemas/Store"
+            - type: "null"
+      required: [store]
+
+    CreateStoreBody:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        logo:
+          type: string
+        banner:
+          type: string
+      required: [name]
+
+    UpdateStoreBody:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        logo:
+          type: string
+        banner:
+          type: string
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        storeId:
+          type: integer
+        storeName:
+          type: ["string", "null"]
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+        coverImage:
+          type: ["string", "null"]
+        fileUrl:
+          type: ["string", "null"]
+        status:
+          type: string
+        reviewCount:
+          type: integer
+        avgRating:
+          type: number
+        createdAt:
+          type: string
+      required: [id, storeId, title, description, price, category, status, reviewCount, avgRating, createdAt]
+
+    CreateProductBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+        coverImage:
+          type: string
+        fileUrl:
+          type: string
+      required: [title, description, price, category]
+
+    UpdateProductBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+        coverImage:
+          type: string
+        fileUrl:
+          type: string
+        status:
+          type: string
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+        productId:
+          type: integer
+        userId:
+          type: integer
+        userName:
+          type: string
+        userAvatar:
+          type: ["string", "null"]
+        rating:
+          type: integer
+        comment:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required: [id, productId, userId, userName, rating, createdAt]
+
+    CreateReviewBody:
+      type: object
+      properties:
+        rating:
+          type: integer
+        comment:
+          type: string
+      required: [rating]
+
+    Conversation:
+      type: object
+      properties:
+        id:
+          type: integer
+        otherUser:
+          $ref: "#/components/schemas/User"
+        lastMessage:
+          type: ["string", "null"]
+        lastMessageAt:
+          type: ["string", "null"]
+        unreadCount:
+          type: integer
+        createdAt:
+          type: string
+      required: [id, otherUser, unreadCount, createdAt]
+
+    CreateConversationBody:
+      type: object
+      properties:
+        recipientId:
+          type: integer
+      required: [recipientId]
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+        conversationId:
+          type: integer
+        senderId:
+          type: integer
+        senderName:
+          type: string
+        senderAvatar:
+          type: ["string", "null"]
+        content:
+          type: string
+        createdAt:
+          type: string
+      required: [id, conversationId, senderId, senderName, content, createdAt]
+
+    SendMessageBody:
+      type: object
+      properties:
+        content:
+          type: string
+      required: [content]
+
+    CatalogStats:
+      type: object
+      properties:
+        totalProducts:
+          type: integer
+        totalStores:
+          type: integer
+        totalCategories:
+          type: integer
+        totalSellers:
+          type: integer
+      required: [totalProducts, totalStores, totalCategories, totalSellers]
