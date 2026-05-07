@@ -5,6 +5,7 @@
   "outputDirectory": "artifacts/velzo/dist",
   "framework": null,
   "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/index" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
