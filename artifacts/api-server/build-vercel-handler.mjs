@@ -9,7 +9,7 @@ const artifactDir = path.dirname(fileURLToPath(import.meta.url));
 const outfile = path.resolve(artifactDir, "../../api/handler.mjs");
 
 await esbuild({
-  entryPoints: [path.resolve(artifactDir, "src/app.ts")],
+  entryPoints: [path.resolve(artifactDir, "src/app-serverless.ts")],
   platform: "node",
   bundle: true,
   format: "esm",
