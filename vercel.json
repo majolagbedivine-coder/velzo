@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm --filter @workspace/velzo run build:vercel",
+  "buildCommand": "pnpm --filter @workspace/velzo run build:vercel && pnpm --filter @workspace/api-server run build:vercel-handler",
   "outputDirectory": "artifacts/velzo/dist",
   "framework": null,
   "rewrites": [
