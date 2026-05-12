@@ -17,6 +17,7 @@ interface AuthContextValue {
   loading: boolean;
   login: (token: string, user: AuthUser) => void;
   logout: () => void;
+  updateUser: (updates: Partial<AuthUser>) => void;
   isAuthenticated: boolean;
 }
 
@@ -26,6 +27,7 @@ const AuthContext = createContext<AuthContextValue>({
   loading: true,
   login: () => {},
   logout: () => {},
+  updateUser: () => {},
   isAuthenticated: false,
 });
 
@@ -67,10 +69,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setAuthTokenGetter(null);
   }, []);
 
+  const updateUser = useCallback((updates: Partial<AuthUser>) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, ...updates };
+      localStorage.setItem("velzo_user", JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
   return (
-    <AuthContext.Provider
-      value={{ user, token, loading, login, logout, isAuthenticated: !!user }}
-    >
+    <AuthContext.Provider value={{ user, token, loading, login, logout, updateUser, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );

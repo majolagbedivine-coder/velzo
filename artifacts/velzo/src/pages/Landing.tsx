@@ -292,21 +292,9 @@ export default function Landing() {
               >
                 <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-primary" /> SSL Secure</span>
                 <span className="flex items-center gap-1.5"><Zap className="h-4 w-4 text-primary" /> Instant Delivery</span>
-                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-primary" /> No Monthly Fees</span>
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-primary" /> Zero Commission Fees</span>
               </motion.div>
             </motion.div>
-          </div>
-        </section>
-
-        {/* Social Proof */}
-        <section className="py-10 border-y border-border bg-card/30">
-          <div className="container mx-auto px-4">
-            <p className="text-center text-xs font-semibold text-muted-foreground mb-6 uppercase tracking-widest">Trusted by top creators worldwide</p>
-            <div className="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-40 grayscale">
-              {["Notion", "Figma", "Framer", "Webflow", "Gumroad", "Lemon Squeezy"].map((brand, i) => (
-                <span key={i} className="text-xl md:text-2xl font-bold tracking-tight font-serif">{brand}</span>
-              ))}
-            </div>
           </div>
         </section>
 

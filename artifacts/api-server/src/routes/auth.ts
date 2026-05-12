@@ -107,4 +107,64 @@ router.get("/auth/me", authenticate, async (req, res) => {
   });
 });
 
+router.patch("/auth/profile", authenticate, async (req, res) => {
+  const { name, bio, avatar } = req.body as {
+    name?: string;
+    bio?: string;
+    avatar?: string;
+  };
+  const updates: Record<string, unknown> = {};
+  if (name !== undefined) updates.name = name.trim();
+  if (bio !== undefined) updates.bio = bio.trim() || null;
+  if (avatar !== undefined) updates.avatar = avatar.trim() || null;
+
+  if (Object.keys(updates).length === 0) {
+    res.status(400).json({ error: "No fields to update" });
+    return;
+  }
+
+  const [user] = await db
+    .update(users)
+    .set(updates)
+    .where(eq(users.id, req.user!.userId))
+    .returning();
+
+  res.json({
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    avatar: user.avatar,
+    bio: user.bio,
+    createdAt: user.createdAt.toISOString(),
+  });
+});
+
+router.patch("/auth/role", authenticate, async (req, res) => {
+  const { role } = req.body as { role: string };
+  if (!["buyer", "seller"].includes(role)) {
+    res.status(400).json({ error: "Role must be buyer or seller" });
+    return;
+  }
+  const [user] = await db
+    .update(users)
+    .set({ role })
+    .where(eq(users.id, req.user!.userId))
+    .returning();
+
+  const newToken = signToken({ userId: user.id, email: user.email, role: user.role });
+  res.json({
+    token: newToken,
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      avatar: user.avatar,
+      bio: user.bio,
+      createdAt: user.createdAt.toISOString(),
+    },
+  });
+});
+
 export default router;
