@@ -11,6 +11,7 @@ const CATEGORIES = [
   "All", "Templates", "E-Books", "Courses", "Software", "Graphics", "Music",
   "Photography", "Fonts", "3D Models", "Plugins", "Spreadsheets", "Videos",
   "Audio", "Illustrations", "Icons", "Mockups", "Presets", "Games", "Scripts",
+  "Tickets",
 ];
 
 function ProductCard({ product }: { product: any }) {

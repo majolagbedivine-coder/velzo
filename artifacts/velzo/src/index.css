@@ -99,7 +99,7 @@
   --popover-foreground: 24 10% 10%;
   --popover-border: 60 5% 85%;
 
-  --primary: 156 54% 25%; /* #1D6146 */
+  --primary: 150 63% 14%; /* #0D3B27 */
   --primary-foreground: 0 0% 100%;
 
   --secondary: 60 9% 85%;
@@ -126,7 +126,7 @@
   --app-font-sans: 'Inter', sans-serif;
   --app-font-serif: Georgia, serif;
   --app-font-mono: Menlo, monospace;
-  --radius: .875rem; /* 14px */
+  --radius: .25rem; /* 4px – tight radius */
 
   --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00); /*replace with H S L */
   --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00); /*replace with H S L */
